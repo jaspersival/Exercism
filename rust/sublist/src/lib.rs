@@ -10,9 +10,8 @@ pub fn sublist<T: PartialEq>(_first_list: &[T], _second_list: &[T]) -> Compariso
     match _first_list == _second_list {
         true => Comparison::Equal,
         false => {
-            if _first_list == [] {
-                Comparison::Sublist
-            }
+            if _first_list == [] { Comparison::Sublist}
+            else if _second_list == [] {Comparison::Superlist}
             else {Comparison::Unequal}
         }
     }

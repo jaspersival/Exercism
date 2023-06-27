@@ -13,7 +13,6 @@ fn test_empty_is_a_sublist_of_anything() {
 }
 
 #[test]
-#[ignore]
 fn test_anything_is_a_superlist_of_empty() {
     assert_eq!(Comparison::Superlist, sublist(&['a', 's', 'd', 'f'], &[]));
 }
