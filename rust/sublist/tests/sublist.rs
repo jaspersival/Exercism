@@ -18,13 +18,11 @@ fn test_anything_is_a_superlist_of_empty() {
 }
 
 #[test]
-#[ignore]
 fn test_1_is_not_2() {
     assert_eq!(Comparison::Unequal, sublist(&[1], &[2]));
 }
 
 #[test]
-#[ignore]
 fn test_compare_larger_equal_lists() {
     use std::iter::repeat;
 
@@ -34,7 +32,6 @@ fn test_compare_larger_equal_lists() {
 }
 
 #[test]
-#[ignore]
 fn test_sublist_at_start() {
     assert_eq!(Comparison::Sublist, sublist(&[1, 2, 3], &[1, 2, 3, 4, 5]));
 }
