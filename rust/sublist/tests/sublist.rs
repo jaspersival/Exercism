@@ -8,7 +8,6 @@ fn empty_equals_empty() {
 }
 
 #[test]
-#[ignore]
 fn test_empty_is_a_sublist_of_anything() {
     assert_eq!(Comparison::Sublist, sublist(&[], &['a', 's', 'd', 'f']));
 }
