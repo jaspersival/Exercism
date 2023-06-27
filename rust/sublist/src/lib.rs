@@ -13,11 +13,22 @@ pub fn sublist<T: PartialEq>(_first_list: &[T], _second_list: &[T]) -> Compariso
             if _first_list == [] { Comparison::Sublist}
             else if _second_list == [] {Comparison::Superlist}
             else {
-                if _first_list.iter().all( |item| _second_list.iter().any(|item_second_list| item == item_second_list)){
-                    Comparison::Sublist
+                match _first_list.len() < _second_list.len() {
+                    true => {if is_sublist(_first_list, _second_list){
+                        Comparison::Sublist}
+                        else {Comparison::Unequal}},
+                    false => {
+                            if is_sublist(_second_list, _first_list) {
+                                Comparison::Superlist
+                            }
+                            else {Comparison::Unequal}
+                        }
+                    }
                 }
-                else {Comparison::Unequal}
+            }
             }
         }
-        }
-    }
+
+fn is_sublist<T: PartialEq>(_first_list: &[T], _second_list: &[T]) -> bool {
+    _first_list.iter().all(|item| _second_list.iter().any(|item_second_list| item == item_second_list))
+}
