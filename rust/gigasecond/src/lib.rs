@@ -1,9 +1,8 @@
 use std::ops::Add;
-use time::Duration;
+use time::ext::NumericalDuration;
 use time::PrimitiveDateTime as DateTime;
 
 // Returns a DateTime one billion seconds after start.
 pub fn after(start: DateTime) -> DateTime {
-    let billion_seconds = Duration::seconds(1e9 as i64);
-    start.add(billion_seconds)
+    start.add(1e9.seconds())
 }
