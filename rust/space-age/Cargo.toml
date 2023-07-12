@@ -4,4 +4,3 @@ name = "space-age"
 version = "1.2.0"
 
 [dependencies]
-time = "0.3.23"
