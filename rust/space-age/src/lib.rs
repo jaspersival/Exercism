@@ -2,11 +2,13 @@
 // In order to pass the tests you can add-to or change any of this code.
 
 #[derive(Debug)]
-pub struct Duration;
+pub struct Duration {
+    seconds: u64,
+}
 
 impl From<u64> for Duration {
     fn from(s: u64) -> Self {
-        unimplemented!("s, measured in seconds: {s}")
+        Duration { seconds: s }
     }
 }
 
@@ -29,7 +31,12 @@ pub struct Neptune;
 
 impl Planet for Mercury {}
 impl Planet for Venus {}
-impl Planet for Earth {}
+impl Planet for Earth {
+    fn years_during(d: &Duration) -> f64 {
+        let year_seconds: f64 = 31556952.0;
+        d.seconds as f64 / year_seconds
+    }
+}
 impl Planet for Mars {}
 impl Planet for Jupiter {}
 impl Planet for Saturn {}
