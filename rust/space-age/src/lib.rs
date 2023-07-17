@@ -23,13 +23,39 @@ pub trait Planet {
 }
 
 pub struct Mercury;
+impl Mercury {
+    const EARTH_YEAR: f64 = 0.2408467;
+}
+
 pub struct Venus;
+impl Venus {
+    const EARTH_YEAR: f64 = 0.61519726;
+}
 pub struct Earth;
 pub struct Mars;
+impl Mars {
+    const EARTH_YEAR: f64 = 1.8808158;
+}
+
 pub struct Jupiter;
+impl Jupiter {
+    const EARTH_YEAR: f64 = 11.862615;
+}
+
 pub struct Saturn;
+impl Saturn {
+    const EARTH_YEAR: f64 = 29.447498;
+}
+
 pub struct Uranus;
+impl Uranus {
+    const EARTH_YEAR: f64 = 84.016846;
+}
+
 pub struct Neptune;
+impl Neptune {
+    const EARTH_YEAR: f64 = 164.79132;
+}
 
 impl Planet for Mercury {
     fn years_during(d: &Duration) -> f64 {
