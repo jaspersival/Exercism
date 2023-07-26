@@ -51,7 +51,6 @@ fn test_one_letter() {
 }
 
 #[test]
-#[ignore]
 fn test_case_insensitivity() {
     let mut hm = HashMap::new();
     hm.insert('a', 2);
