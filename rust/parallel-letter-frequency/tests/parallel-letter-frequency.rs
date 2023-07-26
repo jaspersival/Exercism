@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use parallel_letter_frequency as frequency;
 
@@ -59,14 +59,12 @@ fn test_case_insensitivity() {
 }
 
 #[test]
-#[ignore]
 fn test_many_empty_lines() {
     let v = vec![""; 1000];
     assert_eq!(frequency::frequency(&v[..], 4), HashMap::new());
 }
 
 #[test]
-#[ignore]
 fn test_many_times_same_text() {
     let v = vec!["abc"; 1000];
     let mut hm = HashMap::new();
