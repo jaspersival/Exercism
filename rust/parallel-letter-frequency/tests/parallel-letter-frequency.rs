@@ -74,7 +74,6 @@ fn test_many_times_same_text() {
 }
 
 #[test]
-#[ignore]
 fn test_punctuation_doesnt_count() {
     assert!(!frequency::frequency(&WILHELMUS, 4).contains_key(&','));
 }
