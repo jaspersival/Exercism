@@ -84,7 +84,6 @@ fn test_numbers_dont_count() {
 }
 
 #[test]
-#[ignore]
 fn test_all_three_anthems_1_worker() {
     let mut v = Vec::new();
     for anthem in [ODE_AN_DIE_FREUDE, WILHELMUS, STAR_SPANGLED_BANNER].iter() {
@@ -99,7 +98,6 @@ fn test_all_three_anthems_1_worker() {
 }
 
 #[test]
-#[ignore]
 fn test_all_three_anthems_3_workers() {
     let mut v = Vec::new();
     for anthem in [ODE_AN_DIE_FREUDE, WILHELMUS, STAR_SPANGLED_BANNER].iter() {
@@ -114,7 +112,6 @@ fn test_all_three_anthems_3_workers() {
 }
 
 #[test]
-#[ignore]
 fn test_non_integer_multiple_of_threads() {
     let v = vec!["abc"; 999];
     let mut hm = HashMap::new();
