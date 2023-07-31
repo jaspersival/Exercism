@@ -79,7 +79,6 @@ fn test_punctuation_doesnt_count() {
 }
 
 #[test]
-#[ignore]
 fn test_numbers_dont_count() {
     assert!(!frequency::frequency(&["Testing, 1, 2, 3"], 4).contains_key(&'1'));
 }

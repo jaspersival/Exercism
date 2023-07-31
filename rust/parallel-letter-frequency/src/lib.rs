@@ -5,7 +5,7 @@ pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
 
     for word in input {
         for char in word.to_lowercase().chars() {
-            if char.is_alphanumeric() {
+            if char.is_alphabetic() {
                 let count = frequency_letters.entry(char).or_insert(0);
                 *count += 1;
             }
