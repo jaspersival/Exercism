@@ -1,14 +1,13 @@
 use std::collections::HashMap;
-use std::hash::Hash;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::thread::JoinHandle;
 
-type FrequencyLetters = HashMap<char, Mutex<usize>>;
+type FrequencyLetters = Mutex<HashMap<char, usize>>;
 
 #[derive(Debug)]
 struct ParallelLetterFrequency {
-    frequency_letters: Mutex<HashMap<char, usize>>,
+    frequency_letters: FrequencyLetters,
 }
 
 pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
@@ -16,8 +15,14 @@ pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
         .into_iter()
         .map(|x| String::from(*x))
         .collect::<Vec<String>>();
+    let empty_map: HashMap<char, usize> = HashMap::new();
+
+    if input.is_empty() {
+        return empty_map;
+    }
+
     let parallel_letter_frequency = Arc::new(ParallelLetterFrequency {
-        frequency_letters: Mutex::new(HashMap::new()),
+        frequency_letters: Mutex::new(empty_map),
     });
     let chunk_size = (input.len() + worker_count - 1) / worker_count;
     let input_chunked = input
