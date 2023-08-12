@@ -52,15 +52,14 @@ fn worker_thread(
     parallel_letter_frequency: Arc<ParallelLetterFrequency>,
 ) {
     for word in input_chunk {
-        for char in word.to_lowercase().chars() {
-            if char.is_alphabetic() {
-                let mut frequency_letters_guard = parallel_letter_frequency
+        for char in word.chars().filter(|c| c.is_alphabetic()) {
+            if let Some(c) = char.to_lowercase().next() {
+                *parallel_letter_frequency
                     .frequency_letters
                     .lock()
-                    .expect("Failed to lock Mutex");
-
-                let count = frequency_letters_guard.entry(char).or_insert(0);
-                *count += 1;
+                    .unwrap()
+                    .entry(c)
+                    .or_insert(0) += 1;
             }
         }
     }
