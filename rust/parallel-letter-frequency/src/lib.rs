@@ -12,7 +12,7 @@ struct ParallelLetterFrequency {
 
 pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
     let input = input
-        .into_iter()
+        .iter()
         .map(|x| String::from(*x))
         .collect::<Vec<String>>();
     let empty_map: HashMap<char, usize> = HashMap::new();
