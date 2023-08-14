@@ -1,33 +1,32 @@
+use std::cmp::min;
 use std::collections::HashMap;
 use std::thread;
-use std::thread::JoinHandle;
 
 type FrequencyLetter = HashMap<char, usize>;
 
 pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
-    let input = input
-        .iter()
-        .map(|x| String::from(*x))
-        .collect::<Vec<String>>();
-    let empty_map: FrequencyLetter = HashMap::new();
+    let input = input.join("");
+    let mut frequency_map: FrequencyLetter = HashMap::new();
 
     if input.is_empty() {
-        return empty_map;
+        return frequency_map;
     }
 
-    let chunk_size = (input.len() + worker_count - 1) / worker_count;
-    let input_chunked = input
-        .chunks(chunk_size)
-        .map(|x| x.to_vec())
-        .collect::<Vec<_>>();
+    let mut churn = input.chars();
+    let real_worker_count = min(input.len(), worker_count);
+    let mut thread_pool = Vec::with_capacity(real_worker_count);
+    let mut work_length = (input.len() / real_worker_count).max(1);
+    if work_length * real_worker_count < input.len() {
+        work_length += 1;
+    }
 
-    let mut frequency_map: FrequencyLetter = HashMap::new();
+    for _ in 0..real_worker_count {
+        let chunk = churn.by_ref().take(work_length).collect::<String>();
+        let thread = thread::spawn(move || worker_thread(chunk));
+        thread_pool.push(thread);
+    }
     // "https://stackoverflow.com/questions/50282619/is-it-possible-to-share-a-hashmap-between-threads-without-locking-the-entire-has"
-    let threads: Vec<JoinHandle<FrequencyLetter>> = input_chunked
-        .into_iter()
-        .map(|input_chunk| thread::spawn(move || worker_thread(input_chunk)))
-        .collect();
-    for t in threads {
+    for t in thread_pool {
         let result = t.join().expect("Thread panicked");
         for (key, value) in result.iter() {
             *frequency_map.entry(*key).or_default() += value;
@@ -35,13 +34,11 @@ pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
     }
     frequency_map
 }
-fn worker_thread(input_chunk: Vec<String>) -> FrequencyLetter {
+fn worker_thread(chunk: String) -> FrequencyLetter {
     let mut frequency_map: FrequencyLetter = HashMap::new();
-    for word in input_chunk {
-        for char in word.chars().filter(|c| c.is_alphabetic()) {
-            if let Some(c) = char.to_lowercase().next() {
-                *frequency_map.entry(c).or_default() += 1;
-            }
+    for char in chunk.chars().filter(|c| c.is_alphabetic()) {
+        if let Some(c) = char.to_lowercase().next() {
+            *frequency_map.entry(c).or_default() += 1;
         }
     }
     frequency_map
