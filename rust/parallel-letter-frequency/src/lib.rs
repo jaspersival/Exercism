@@ -1,66 +1,48 @@
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
 use std::thread;
 use std::thread::JoinHandle;
 
-type FrequencyLetters = Mutex<HashMap<char, usize>>;
-
-#[derive(Debug)]
-struct ParallelLetterFrequency {
-    frequency_letters: FrequencyLetters,
-}
+type FrequencyLetter = HashMap<char, usize>;
 
 pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
     let input = input
         .iter()
         .map(|x| String::from(*x))
         .collect::<Vec<String>>();
-    let empty_map: HashMap<char, usize> = HashMap::new();
+    let empty_map: FrequencyLetter = HashMap::new();
 
     if input.is_empty() {
         return empty_map;
     }
 
-    let parallel_letter_frequency = Arc::new(ParallelLetterFrequency {
-        frequency_letters: Mutex::new(empty_map),
-    });
     let chunk_size = (input.len() + worker_count - 1) / worker_count;
     let input_chunked = input
         .chunks(chunk_size)
         .map(|x| x.to_vec())
         .collect::<Vec<_>>();
 
+    let mut frequency_map: FrequencyLetter = HashMap::new();
     // "https://stackoverflow.com/questions/50282619/is-it-possible-to-share-a-hashmap-between-threads-without-locking-the-entire-has"
-    let threads: Vec<JoinHandle<()>> = input_chunked
+    let threads: Vec<JoinHandle<FrequencyLetter>> = input_chunked
         .into_iter()
-        .map(|input_chunk| {
-            let frequency_letter_clone = Arc::clone(&parallel_letter_frequency);
-            thread::spawn(move || worker_thread(input_chunk, frequency_letter_clone))
-        })
+        .map(|input_chunk| thread::spawn(move || worker_thread(input_chunk)))
         .collect();
     for t in threads {
-        t.join().expect("Thread panicked");
+        let result = t.join().expect("Thread panicked");
+        for (key, value) in result.iter() {
+            *frequency_map.entry(*key).or_default() += value;
+        }
     }
-    Arc::try_unwrap(parallel_letter_frequency)
-        .expect("Failed to get map from Arc")
-        .frequency_letters
-        .into_inner()
-        .expect("Failed to get map from Mutex")
+    frequency_map
 }
-fn worker_thread(
-    input_chunk: Vec<String>,
-    parallel_letter_frequency: Arc<ParallelLetterFrequency>,
-) {
+fn worker_thread(input_chunk: Vec<String>) -> FrequencyLetter {
+    let mut frequency_map: FrequencyLetter = HashMap::new();
     for word in input_chunk {
         for char in word.chars().filter(|c| c.is_alphabetic()) {
             if let Some(c) = char.to_lowercase().next() {
-                *parallel_letter_frequency
-                    .frequency_letters
-                    .lock()
-                    .unwrap()
-                    .entry(c)
-                    .or_insert(0) += 1;
+                *frequency_map.entry(c).or_default() += 1;
             }
         }
     }
+    frequency_map
 }
