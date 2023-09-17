@@ -5,8 +5,7 @@ use std::io::{Cursor, Read, Result, Write};
 // about missing generics; feel free to remove them
 
 pub struct ReadStats<R> {
-    data: R,
-    cursor: usize,
+    wrapped: R,
     _reads: usize,
 }
 
@@ -16,14 +15,13 @@ impl<R: Read> ReadStats<R> {
     // wish to remove the leading underscore so the variable is not ignored.
     pub fn new(data: R) -> ReadStats<R> {
         ReadStats {
-            data,
-            cursor: 0,
+            wrapped: data,
             _reads: 0,
         }
     }
 
     pub fn get_ref(&self) -> &R {
-        &self.data
+        &self.wrapped
     }
 
     pub fn bytes_through(&self) -> usize {
@@ -31,15 +29,16 @@ impl<R: Read> ReadStats<R> {
     }
 
     pub fn reads(&self) -> usize {
-        self.cursor
+        self._reads
     }
 }
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        let result = self.read_to_end(&mut buf.to_vec());
-        self.cursor += buf.len();
-        self._reads += 1;
+        let result = self.wrapped.read(buf);
+        if result.is_ok() {
+            self._reads += 1;
+        }
         result
     }
 }
