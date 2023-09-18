@@ -165,7 +165,7 @@ fn test_create_stats() {
     let _ = paasio::WriteStats::new(data.as_mut_slice());
 }
 
-test_read!(#[ignore] read_string (
+test_read!(read_string (
     "Twas brillig, and the slithy toves/Did gyre and gimble in the wabe:/All mimsy were the borogoves,/And the mome raths outgrabe.".as_bytes(),
     |d: &[u8]| d.len()
 ));
@@ -174,13 +174,10 @@ test_write!(#[ignore] write_string (
     |d: &[u8]| d.len()
 ));
 
-test_read!(
-    #[ignore]
-    read_byte_literal(
-        &[1_u8, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144][..],
-        |d: &[u8]| d.len()
-    )
-);
+test_read!(read_byte_literal(
+    &[1_u8, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144][..],
+    |d: &[u8]| d.len()
+));
 test_write!(
     #[ignore]
     write_byte_literal(
@@ -189,16 +186,12 @@ test_write!(
     )
 );
 
-test_read!(
-    #[ignore]
-    read_file(
-        ::std::fs::File::open("Cargo.toml").expect("Cargo.toml must be present"),
-        |f: &::std::fs::File| f.metadata().expect("metadata must be present").len() as usize
-    )
-);
+test_read!(read_file(
+    ::std::fs::File::open("Cargo.toml").expect("Cargo.toml must be present"),
+    |f: &::std::fs::File| f.metadata().expect("metadata must be present").len() as usize
+));
 
 #[test]
-#[ignore]
 fn read_stats_by_ref_returns_wrapped_reader() {
     use paasio::ReadStats;
 

@@ -1,5 +1,4 @@
-use std::cmp::min;
-use std::io::{Cursor, Read, Result, Write};
+use std::io::{Read, Result, Write};
 
 // the PhantomData instances in this file are just to stop compiler complaints
 // about missing generics; feel free to remove them
@@ -7,6 +6,7 @@ use std::io::{Cursor, Read, Result, Write};
 pub struct ReadStats<R> {
     wrapped: R,
     _reads: usize,
+    _bytes_through: usize,
 }
 
 impl<R: Read> ReadStats<R> {
@@ -17,6 +17,7 @@ impl<R: Read> ReadStats<R> {
         ReadStats {
             wrapped: data,
             _reads: 0,
+            _bytes_through: 0,
         }
     }
 
@@ -25,7 +26,7 @@ impl<R: Read> ReadStats<R> {
     }
 
     pub fn bytes_through(&self) -> usize {
-        unimplemented!()
+        self._bytes_through
     }
 
     pub fn reads(&self) -> usize {
@@ -35,11 +36,14 @@ impl<R: Read> ReadStats<R> {
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        let result = self.wrapped.read(buf);
-        if result.is_ok() {
-            self._reads += 1;
+        match self.wrapped.read(buf) {
+            Ok(bytes_read) => {
+                self._reads += 1;
+                self._bytes_through += bytes_read;
+                Ok(bytes_read)
+            }
+            Err(e) => Err(e),
         }
-        result
     }
 }
 
