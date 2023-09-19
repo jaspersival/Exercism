@@ -25,29 +25,13 @@ impl Luhn {
 /// by hand for the every other type presented in the test suite,
 /// but your solution will fail if a new type is presented.
 /// Perhaps there exists a better solution for this problem?
-impl<'a> From<&'a str> for Luhn {
-    fn from(input: &'a str) -> Self {
-        // 'input' is a borrowed string (&str), can be used directly
+impl<T> From<T> for Luhn
+where
+    T: ToString,
+{
+    fn from(input: T) -> Self {
         Self {
             code: input.to_string(),
         }
     }
 }
-
-impl From<String> for Luhn {
-    fn from(input: String) -> Self {
-        Self { code: input }
-    }
-}
-macro_rules! impl_trait_for_unsigned {
-    ($($t:ty),*) => {
-        $(
-            impl From<$t> for Luhn {
-                fn from(input: $t) -> Self {
-                    Self { code: input.to_string()}
-                }
-            }
-        )*
-    }
-}
-impl_trait_for_unsigned!(u8, u16, u32, u64, usize);
