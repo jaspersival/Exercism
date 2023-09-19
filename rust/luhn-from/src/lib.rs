@@ -1,5 +1,3 @@
-use num_traits::PrimInt;
-use std::fmt::Debug;
 pub struct Luhn {
     code: String,
 }
