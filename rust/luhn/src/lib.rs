@@ -8,8 +8,7 @@ pub fn is_valid(code: &str) -> bool {
     let digits_result: Vec<Option<u32>> = chars.into_iter().map(|c| c.to_digit(10)).collect();
     let len_digits_result = digits_result.len();
     let mut digits: Vec<u32> = digits_result.into_iter().flatten().collect();
-    let len_digits = digits.len();
-    if len_digits != len_digits_result {
+    if len_digits_result != digits.len() {
         return false;
     }
     let len = digits.len();
