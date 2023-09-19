@@ -15,37 +15,31 @@ fn a_single_zero_is_invalid() {
 }
 
 #[test]
-#[ignore]
 fn a_simple_valid_sin_that_remains_valid_if_reversed() {
     process_valid_case("059", true);
 }
 
 #[test]
-#[ignore]
 fn a_simple_valid_sin_that_becomes_invalid_if_reversed() {
     process_valid_case("59", true);
 }
 
 #[test]
-#[ignore]
 fn a_valid_canadian_sin() {
     process_valid_case("055 444 285", true);
 }
 
 #[test]
-#[ignore]
 fn invalid_canadian_sin() {
     process_valid_case("055 444 286", false);
 }
 
 #[test]
-#[ignore]
 fn invalid_credit_card() {
     process_valid_case("8273 1232 7352 0569", false);
 }
 
 #[test]
-#[ignore]
 fn valid_number_with_an_even_number_of_digits() {
     process_valid_case("095 245 88", true);
 }
