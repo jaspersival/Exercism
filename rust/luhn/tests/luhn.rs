@@ -10,7 +10,6 @@ fn single_digit_strings_can_not_be_valid() {
 }
 
 #[test]
-#[ignore]
 fn a_single_zero_is_invalid() {
     process_valid_case("0", false);
 }
