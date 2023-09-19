@@ -1,16 +1,17 @@
 /// Check a Luhn checksum.
 pub fn is_valid(code: &str) -> bool {
-    if code.len() <= 1 {
+    let code_stripped = code.replace(" ", "");
+    if code_stripped.len() <= 1 {
         return false;
     }
-    let code_stripped = code.replace(" ", "");
-    let digits_result: Vec<Option<u32>> = code_stripped
-        .chars()
-        .collect::<Vec<char>>()
-        .into_iter()
-        .map(|c| c.to_digit(10))
-        .collect();
+    let chars: Vec<char> = code_stripped.chars().collect();
+    let digits_result: Vec<Option<u32>> = chars.into_iter().map(|c| c.to_digit(10)).collect();
+    let len_digits_result = digits_result.len();
     let mut digits: Vec<u32> = digits_result.into_iter().flatten().collect();
+    let len_digits = digits.len();
+    if len_digits != len_digits_result {
+        return false;
+    }
     let len = digits.len();
     for i in (0..(len - 1)).step_by(2) {
         let digit_doubled = digits[len - 2 - i] * 2;
