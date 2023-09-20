@@ -7,9 +7,13 @@ pub trait Luhn {
 /// by hand for the every other type presented in the test suite,
 /// but your solution will fail if a new type is presented.
 /// Perhaps there exists a better solution for this problem?
-impl<'a> Luhn for &'a str {
+impl<T> Luhn for T
+where
+    T: ToString,
+{
     fn valid_luhn(&self) -> bool {
-        self.chars()
+        self.to_string()
+            .chars()
             .rev()
             .filter(|c| !c.is_whitespace())
             .try_fold((0, 0), |(sum, count), val| {
