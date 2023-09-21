@@ -6,6 +6,8 @@ pub enum Error {
 
 pub struct BowlingGame {
     pins_scored: u16,
+    frames: u8,
+    rolls: u8,
 }
 
 impl Default for BowlingGame {
@@ -16,17 +18,26 @@ impl Default for BowlingGame {
 
 impl BowlingGame {
     pub fn new() -> Self {
-        Self { pins_scored: 0 }
+        Self {
+            pins_scored: 0,
+            frames: 10,
+            rolls: 0,
+        }
     }
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
-        if pins == 0 {
-            Ok(())
-        } else {
+        if pins > 10 {
             Err(Error::NotEnoughPinsLeft)
+        } else {
+            if self.rolls == 2 {
+                self.rolls = 0;
+                self.frames -= 1;
+            }
+            self.rolls += 1;
+            Ok(())
         }
     }
 
     pub fn score(&self) -> Option<u16> {
-        todo!("Return the score if the game is complete, or None if not.");
+        Some(self.pins_scored)
     }
 }
