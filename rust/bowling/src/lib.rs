@@ -28,16 +28,20 @@ impl BowlingGame {
         if pins > 10 {
             Err(Error::NotEnoughPinsLeft)
         } else {
+            self.rolls += 1;
             if self.rolls == 2 {
                 self.rolls = 0;
                 self.frames -= 1;
             }
-            self.rolls += 1;
             Ok(())
         }
     }
 
     pub fn score(&self) -> Option<u16> {
-        Some(self.pins_scored)
+        if self.frames > 0 {
+            None
+        } else {
+            Some(self.pins_scored)
+        }
     }
 }

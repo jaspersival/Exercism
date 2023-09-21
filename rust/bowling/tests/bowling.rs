@@ -26,7 +26,6 @@ fn a_game_score_is_some_if_ten_frames_have_been_rolled() {
 }
 
 #[test]
-#[ignore]
 fn you_cannot_score_a_game_with_no_rolls() {
     let game = BowlingGame::new();
 
