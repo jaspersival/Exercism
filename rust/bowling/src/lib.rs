@@ -4,11 +4,30 @@ pub enum Error {
     GameComplete,
 }
 
-pub struct BowlingGame {
+#[derive(Copy, Clone)]
+pub enum FrameType {
+    Open,
+    Spare,
+    Strike,
+}
+
+#[derive(Copy, Clone)]
+pub struct Frame {
+    frame_type: FrameType,
     pins_scored: u16,
-    frames: u8,
+}
+impl Default for Frame {
+    fn default() -> Self {
+        Frame {
+            frame_type: FrameType::Open,
+            pins_scored: 0,
+        }
+    }
+}
+pub struct BowlingGame {
+    frames: [Frame; 10],
+    frame_index: usize,
     rolls: u8,
-    pins_scored_in_frame: u16,
     double_pins: u8,
 }
 
@@ -21,45 +40,54 @@ impl Default for BowlingGame {
 impl BowlingGame {
     pub fn new() -> Self {
         Self {
-            pins_scored: 0,
-            frames: 10,
+            frames: [Frame::default(); 10],
+            frame_index: 0,
             rolls: 0,
-            pins_scored_in_frame: 0,
             double_pins: 0,
         }
     }
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
-        let mut multiplier: u16 = 1;
         if pins > 10 {
             Err(Error::NotEnoughPinsLeft)
-        } else if self.frames == 0 {
+        } else if self.frame_index + 1 > self.frames.len() {
             Err(Error::GameComplete)
         } else {
             self.rolls += 1;
-            if self.double_pins > 0 {
-                multiplier = 2;
-                self.double_pins -= 1;
+            if self.frame_index > 0 {
+                match self.frames[self.frame_index - 1].frame_type {
+                    FrameType::Open => {}
+                    FrameType::Spare => {
+                        if self.rolls == 1 {
+                            self.frames[self.frame_index - 1].pins_scored += pins;
+                        }
+                    }
+                    FrameType::Strike => {
+                        self.frames[self.frame_index - 1].pins_scored += pins;
+                    }
+                }
             }
-            self.pins_scored += multiplier * pins;
-            self.pins_scored_in_frame += pins;
+            self.frames[self.frame_index].pins_scored += pins;
+            if pins == 10 && self.rolls == 1 {
+                self.frames[self.frame_index].frame_type = FrameType::Strike;
+                self.rolls = 0;
+                self.frame_index += 1;
+            }
             if self.rolls == 2 {
-                if self.pins_scored_in_frame == 10 {
-                    self.double_pins = 1;
-                } else if pins == 10 {
-                    self.double_pins = 2;
+                if self.frames[self.frame_index].pins_scored == 10 {
+                    self.frames[self.frame_index].frame_type = FrameType::Spare;
                 }
                 self.rolls = 0;
-                self.frames -= 1;
+                self.frame_index += 1;
             }
             Ok(())
         }
     }
 
     pub fn score(&self) -> Option<u16> {
-        if self.frames > 0 {
+        if self.frame_index < 10 {
             None
         } else {
-            Some(self.pins_scored)
+            Some(self.frames.iter().map(|elem| elem.pins_scored).sum())
         }
     }
 }
