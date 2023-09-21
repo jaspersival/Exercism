@@ -4,15 +4,26 @@ pub enum Error {
     GameComplete,
 }
 
-pub struct BowlingGame {}
+pub struct BowlingGame {
+    pins_scored: u16,
+}
+
+impl Default for BowlingGame {
+    fn default() -> Self {
+        BowlingGame::new()
+    }
+}
 
 impl BowlingGame {
     pub fn new() -> Self {
-        todo!();
+        Self { pins_scored: 0 }
     }
-
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
-        todo!("Record that {pins} pins have been scored");
+        if pins == 0 {
+            Ok(())
+        } else {
+            Err(Error::NotEnoughPinsLeft)
+        }
     }
 
     pub fn score(&self) -> Option<u16> {
