@@ -31,6 +31,7 @@ impl BowlingGame {
             Err(Error::GameComplete)
         } else {
             self.rolls += 1;
+            self.pins_scored += pins;
             if self.rolls == 2 {
                 self.rolls = 0;
                 self.frames -= 1;
