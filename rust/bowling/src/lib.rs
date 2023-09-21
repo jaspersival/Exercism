@@ -27,6 +27,8 @@ impl BowlingGame {
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
         if pins > 10 {
             Err(Error::NotEnoughPinsLeft)
+        } else if self.frames == 0 {
+            Err(Error::GameComplete)
         } else {
             self.rolls += 1;
             if self.rolls == 2 {
