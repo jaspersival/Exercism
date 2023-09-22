@@ -186,7 +186,6 @@ fn consecutive_strikes_each_get_the_two_roll_bonus() {
 }
 
 #[test]
-#[ignore]
 fn a_strike_in_the_last_frame_earns_a_two_roll_bonus_that_is_counted_once() {
     let mut game = BowlingGame::new();
 
@@ -202,7 +201,6 @@ fn a_strike_in_the_last_frame_earns_a_two_roll_bonus_that_is_counted_once() {
 }
 
 #[test]
-#[ignore]
 fn a_spare_with_the_two_roll_bonus_does_not_get_a_bonus_roll() {
     let mut game = BowlingGame::new();
 
@@ -218,7 +216,6 @@ fn a_spare_with_the_two_roll_bonus_does_not_get_a_bonus_roll() {
 }
 
 #[test]
-#[ignore]
 fn strikes_with_the_two_roll_bonus_do_not_get_a_bonus_roll() {
     let mut game = BowlingGame::new();
 
@@ -234,7 +231,6 @@ fn strikes_with_the_two_roll_bonus_do_not_get_a_bonus_roll() {
 }
 
 #[test]
-#[ignore]
 fn a_strike_with_the_one_roll_bonus_after_a_spare_in_the_last_frame_does_not_get_a_bonus() {
     let mut game = BowlingGame::new();
 
@@ -250,7 +246,6 @@ fn a_strike_with_the_one_roll_bonus_after_a_spare_in_the_last_frame_does_not_get
 }
 
 #[test]
-#[ignore]
 fn all_strikes_is_a_perfect_score_of_300() {
     let mut game = BowlingGame::new();
 
