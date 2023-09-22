@@ -52,6 +52,13 @@ impl BowlingGame {
                 (FrameType::Strike, 1) => {
                     self.rolls += 1;
                     self.frames[self.frame_index - 1].pins_scored += pins;
+                    if let Some(value) = self
+                        .check_pins_scored_not_greater_than_10_in_a_single_frame(
+                            self.frame_index - 1,
+                        )
+                    {
+                        return value;
+                    }
                     Ok(())
                 }
                 (FrameType::Strike, 0) => {
@@ -60,11 +67,25 @@ impl BowlingGame {
                     if self.frames[self.frame_index - 2].frame_type == FrameType::Strike {
                         self.frames[self.frame_index - 2].pins_scored += pins;
                     }
+                    if let Some(value) = self
+                        .check_pins_scored_not_greater_than_10_in_a_single_frame(
+                            self.frame_index - 2,
+                        )
+                    {
+                        return value;
+                    }
                     Ok(())
                 }
                 (FrameType::Spare, 0) => {
                     self.rolls += 1;
                     self.frames[self.frame_index - 1].pins_scored += pins;
+                    if let Some(value) = self
+                        .check_pins_scored_not_greater_than_10_in_a_single_frame(
+                            self.frame_index - 1,
+                        )
+                    {
+                        return value;
+                    }
                     Ok(())
                 }
                 _ => Err(Error::GameComplete),
@@ -91,8 +112,10 @@ impl BowlingGame {
                 }
             }
             self.frames[self.frame_index].pins_scored += pins;
-            if self.frames[self.frame_index].pins_scored > 10 {
-                return Err(Error::NotEnoughPinsLeft);
+            if let Some(value) =
+                self.check_pins_scored_not_greater_than_10_in_a_single_frame(self.frame_index)
+            {
+                return value;
             }
             if self.is_strike() {
                 self.frames[self.frame_index].frame_type = FrameType::Strike;
@@ -107,6 +130,16 @@ impl BowlingGame {
             }
             Ok(())
         }
+    }
+
+    fn check_pins_scored_not_greater_than_10_in_a_single_frame(
+        &mut self,
+        frame_index: usize,
+    ) -> Option<Result<(), Error>> {
+        if self.frames[frame_index].pins_scored > 10 {
+            return Some(Err(Error::NotEnoughPinsLeft));
+        }
+        None
     }
 
     fn is_spare(&self) -> bool {

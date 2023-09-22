@@ -292,7 +292,6 @@ fn the_two_balls_after_a_final_strike_cannot_score_an_invalid_number_of_pins() {
 }
 
 #[test]
-#[ignore]
 fn the_two_balls_after_a_final_strike_can_be_a_strike_and_non_strike() {
     let mut game = BowlingGame::new();
 
