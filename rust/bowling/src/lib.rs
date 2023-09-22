@@ -66,6 +66,12 @@ impl BowlingGame {
                     }
                     FrameType::Strike => {
                         self.frames[self.frame_index - 1].pins_scored += pins;
+                        if self.frame_index > 1
+                            && self.rolls == 1
+                            && self.frames[self.frame_index - 2].frame_type == FrameType::Strike
+                        {
+                            self.frames[self.frame_index - 2].pins_scored += pins;
+                        }
                     }
                 }
             }
