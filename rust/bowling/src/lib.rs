@@ -4,7 +4,7 @@ pub enum Error {
     GameComplete,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum FrameType {
     Open,
     Spare,
@@ -28,7 +28,6 @@ pub struct BowlingGame {
     frames: [Frame; 10],
     frame_index: usize,
     rolls: u8,
-    double_pins: u8,
 }
 
 impl Default for BowlingGame {
@@ -43,14 +42,18 @@ impl BowlingGame {
             frames: [Frame::default(); 10],
             frame_index: 0,
             rolls: 0,
-            double_pins: 0,
         }
     }
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
         if pins > 10 {
             Err(Error::NotEnoughPinsLeft)
         } else if self.frame_index + 1 > self.frames.len() {
-            Err(Error::GameComplete)
+            if self.frames[self.frame_index - 1].frame_type == FrameType::Open {
+                Err(Error::GameComplete)
+            } else {
+                self.frames[self.frame_index - 1].pins_scored += pins;
+                Ok(())
+            }
         } else {
             self.rolls += 1;
             if self.frame_index > 0 {
@@ -67,20 +70,28 @@ impl BowlingGame {
                 }
             }
             self.frames[self.frame_index].pins_scored += pins;
-            if pins == 10 && self.rolls == 1 {
+            if self.is_strike() {
                 self.frames[self.frame_index].frame_type = FrameType::Strike;
                 self.rolls = 0;
                 self.frame_index += 1;
             }
+            if self.is_spare() {
+                self.frames[self.frame_index].frame_type = FrameType::Spare;
+            }
             if self.rolls == 2 {
-                if self.frames[self.frame_index].pins_scored == 10 {
-                    self.frames[self.frame_index].frame_type = FrameType::Spare;
-                }
                 self.rolls = 0;
                 self.frame_index += 1;
             }
             Ok(())
         }
+    }
+
+    fn is_spare(&self) -> bool {
+        self.frames[self.frame_index].pins_scored == 10 && self.rolls == 2
+    }
+
+    fn is_strike(&self) -> bool {
+        self.frames[self.frame_index].pins_scored == 10 && self.rolls == 1
     }
 
     pub fn score(&self) -> Option<u16> {
