@@ -49,9 +49,17 @@ impl BowlingGame {
             Err(Error::NotEnoughPinsLeft)
         } else if self.frame_index + 1 > self.frames.len() {
             match (self.frames[self.frame_index - 1].frame_type, self.rolls) {
-                (FrameType::Strike, 0 | 1) => {
+                (FrameType::Strike, 1) => {
                     self.rolls += 1;
                     self.frames[self.frame_index - 1].pins_scored += pins;
+                    Ok(())
+                }
+                (FrameType::Strike, 0) => {
+                    self.rolls += 1;
+                    self.frames[self.frame_index - 1].pins_scored += pins;
+                    if self.frames[self.frame_index - 2].frame_type == FrameType::Strike {
+                        self.frames[self.frame_index - 2].pins_scored += pins;
+                    }
                     Ok(())
                 }
                 (FrameType::Spare, 0) => {
@@ -83,6 +91,9 @@ impl BowlingGame {
                 }
             }
             self.frames[self.frame_index].pins_scored += pins;
+            if self.frames[self.frame_index].pins_scored > 10 {
+                return Err(Error::NotEnoughPinsLeft);
+            }
             if self.is_strike() {
                 self.frames[self.frame_index].frame_type = FrameType::Strike;
                 self.rolls = 0;
