@@ -53,7 +53,18 @@ pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>,
 }
 
 fn push_constant_to_result(to_base: u32, total: &mut u32, mut n: u32, mut result: Vec<u32>) ->Vec<u32>{
-    if *total == 0 { return result }
+    if *total == 0 {
+        if n > 0 {
+            n -= 1;
+            loop {
+                result.push(0);
+                if n == 0 { break }
+                n -= 1
+            }
+
+        }
+        return result
+    }
     while to_base.pow(n) <= *total {
         n += 1;
     }
