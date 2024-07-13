@@ -35,11 +35,32 @@ pub enum Error {
 ///  * Never output leading 0 digits, unless the input number is 0, in which the output must be `[0]`.
 ///    However, your function must be able to process input with leading 0 digits.
 ///
-pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<u32,  Error> {
+pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
     if from_base == 0 { return Err(Error::InvalidInputBase)}
+    else if to_base == 0 { return Err(Error::InvalidOutputBase)}
+    else if number.is_empty() { return Ok(vec![0]) }
+    else if number == [0] { return Ok(vec![0])}
+
+
     let mut total: u32 = 0;
     for (index, item) in number.iter().rev().enumerate(){
         total += item * from_base.pow(index as u32);
     }
-    Ok(total)
+    let n = 0;
+    let mut result:Vec<u32>= Vec::new();
+    result = push_constant_to_result(to_base, &mut total, n, result);
+    Ok(result)
 }
+
+fn push_constant_to_result(to_base: u32, total: &mut u32, mut n: u32, mut result: Vec<u32>) ->Vec<u32>{
+    if *total == 0 { return result }
+    while to_base.pow(n) <= *total {
+        n += 1;
+    }
+    n -= 1;
+    let constant = *total / to_base.pow(n);
+    *total -= constant * to_base.pow(n);
+    result.push(constant);
+    push_constant_to_result(to_base, total, n, result)
+}
+
