@@ -1,6 +1,14 @@
 use allyourbase as ayb;
 
 #[test]
+fn check_total(){
+    let input_base = 10;
+    let output_base = 2;
+    let input_digits = &[4, 2];
+    assert_eq!(ayb::convert(input_digits, input_base, output_base), Ok(42))
+}
+
+#[test]
 fn single_bit_one_to_decimal() {
     let input_base = 2;
     let input_digits = &[1];
