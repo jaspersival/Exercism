@@ -36,7 +36,9 @@ pub enum Error {
 ///    However, your function must be able to process input with leading 0 digits.
 ///
 pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
-    if from_base < 2 { return Err(Error::InvalidInputBase) } else if let Some(max_digit) = number.iter().max().copied() {
+    if from_base < 2 { return Err(Error::InvalidInputBase) }
+    else if to_base <= 1 { return Err(Error::InvalidOutputBase) }
+    else if let Some(max_digit) = number.iter().max().copied() {
         if max_digit > 1 && from_base == 2 {
             return Err(Error::InvalidDigit(max_digit));
         }
