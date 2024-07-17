@@ -43,7 +43,8 @@ pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>,
             return Err(Error::InvalidDigit(max_digit));
         }
         if max_digit == 0 { return Ok(vec![0]) }
-    } else if to_base == 0 { return Err(Error::InvalidOutputBase) } else if number.is_empty() { return Ok(vec![0]) }
+    }
+    else if number.is_empty() { return Ok(vec![0]) }
 
 
     let mut total: u32 = 0;
