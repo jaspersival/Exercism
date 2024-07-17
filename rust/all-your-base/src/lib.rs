@@ -37,7 +37,7 @@ pub enum Error {
 ///
 pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
     if from_base < 2 { return Err(Error::InvalidInputBase) } else if let Some(max_digit) = number.iter().max().copied() {
-        if max_digit > 1 && to_base == 2 {
+        if max_digit > 1 && from_base == 2 {
             return Err(Error::InvalidDigit(max_digit));
         }
         if max_digit == 0 { return Ok(vec![0]) }
