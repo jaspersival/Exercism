@@ -36,18 +36,20 @@ pub enum Error {
 ///    However, your function must be able to process input with leading 0 digits.
 ///
 pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
-    if from_base == 0 { return Err(Error::InvalidInputBase)}
-    else if to_base == 0 { return Err(Error::InvalidOutputBase)}
-    else if number.is_empty() { return Ok(vec![0]) }
-    else if number == [0] { return Ok(vec![0])}
+    if from_base < 2 { return Err(Error::InvalidInputBase) } else if let Some(max_digit) = number.iter().max().copied() {
+        if max_digit > 1 && to_base == 2 {
+            return Err(Error::InvalidDigit(max_digit));
+        }
+        if max_digit == 0 { return Ok(vec![0]) }
+    } else if to_base == 0 { return Err(Error::InvalidOutputBase) } else if number.is_empty() { return Ok(vec![0]) }
 
 
     let mut total: u32 = 0;
-    for (index, item) in number.iter().rev().enumerate(){
+    for (index, item) in number.iter().rev().enumerate() {
         total += item * from_base.pow(index as u32);
     }
     let n = 0;
-    let mut result:Vec<u32>= Vec::new();
+    let mut result: Vec<u32> = Vec::new();
     result = push_constant_to_result(to_base, &mut total, n, result);
     Ok(result)
 }

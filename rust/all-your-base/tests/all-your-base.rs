@@ -145,7 +145,6 @@ fn leading_zeros() {
 }
 
 #[test]
-#[ignore]
 fn invalid_positive_digit() {
     let input_base = 2;
     let input_digits = &[1, 2, 1, 0, 1, 0];
