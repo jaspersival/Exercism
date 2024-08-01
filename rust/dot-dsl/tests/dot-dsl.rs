@@ -19,7 +19,7 @@ fn empty_graph() {
 fn graph_with_one_node() {
     let nodes = vec![Node::new("a")];
 
-    let graph = Graph::new().with_nodes(&nodes);
+    let graph = Graph::new().with_nodes(nodes);
 
     assert!(graph.edges.is_empty());
 
@@ -33,7 +33,7 @@ fn graph_with_one_node() {
 fn graph_with_one_node_with_keywords() {
     let nodes = vec![Node::new("a").with_attrs(&[("color", "green")])];
 
-    let graph = Graph::new().with_nodes(&nodes);
+    let graph = Graph::new().with_nodes(nodes);
 
     assert!(graph.edges.is_empty());
 
@@ -50,7 +50,7 @@ fn graph_with_one_node_with_keywords() {
 fn graph_with_one_edge() {
     let edges = vec![Edge::new("a", "b")];
 
-    let graph = Graph::new().with_edges(&edges);
+    let graph = Graph::new().with_edges(edges);
 
     assert!(graph.nodes.is_empty());
 
@@ -64,7 +64,7 @@ fn graph_with_one_edge() {
 fn graph_with_one_edge_with_keywords() {
     let edges = vec![Edge::new("a", "b").with_attrs(&[("color", "blue")])];
 
-    let graph = Graph::new().with_edges(&edges);
+    let graph = Graph::new().with_edges(edges);
 
     assert!(graph.nodes.is_empty());
 
@@ -115,8 +115,8 @@ fn graph_with_attributes() {
     };
 
     let graph = Graph::new()
-        .with_nodes(&nodes)
-        .with_edges(&edges)
+        .with_nodes(nodes)
+        .with_edges(edges)
         .with_attrs(&attrs);
 
     assert_eq!(
@@ -181,7 +181,7 @@ fn edges_store_attributes() {
 fn graph_nodes_store_attributes() {
     let attributes = [("foo", "bar"), ("bat", "baz"), ("bim", "bef")];
     let graph = Graph::new().with_nodes(
-        &["a", "b", "c"]
+        ["a", "b", "c"]
             .iter()
             .zip(attributes.iter())
             .map(|(name, &attr)| Node::new(name).with_attrs(&[attr]))
