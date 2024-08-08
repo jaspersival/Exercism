@@ -1,7 +1,6 @@
 pub mod graph {
     use std::collections::HashMap;
 
-    #[derive(PartialEq, Debug)]
     pub struct Graph<'a> {
         pub nodes: Vec<graph_items::node::Node<'a>>,
         pub edges: Vec<graph_items::edge::Edge<'a>>,
