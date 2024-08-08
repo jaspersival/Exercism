@@ -1,6 +1,7 @@
 pub mod graph {
     use std::collections::HashMap;
 
+    #[derive(Default)]
     pub struct Graph<'a> {
         pub nodes: Vec<graph_items::node::Node<'a>>,
         pub edges: Vec<graph_items::edge::Edge<'a>>,
@@ -9,7 +10,7 @@ pub mod graph {
 
     impl<'a> Graph<'a> {
         pub fn new() -> Self {
-            return Graph {nodes: Vec::new(), edges: Vec::new(), attrs: HashMap::new() }
+            return Self::default()
         }
         pub fn with_nodes(mut self, nodes: &Vec<graph_items::node::Node<'a>>) -> Self {
             self.nodes.extend(nodes.clone());
@@ -20,18 +21,11 @@ pub mod graph {
             self
         }
         pub fn with_attrs(mut self, attrs: &[(&'a str, &'a str)]) -> Self {
-            for (k, v) in attrs {
-                self.attrs.insert(k.to_string(), v.to_string());
-            }
+            self.attrs = attrs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect();
             self
         }
         pub fn node(&self, name: &'a str) -> Option<& graph_items::node::Node> {
-            for node in &self.nodes {
-                if node.name == name {
-                    return Some(node)
-                }
-            }
-            return None
+            return self.nodes.iter().find(|node| node.name == name)
         }
     }
 
@@ -49,9 +43,7 @@ pub mod graph {
                     return Node {name, attrs: HashMap::new()}
                 }
                 pub fn with_attrs(mut self,attrs: &[(&'a str, &'a str)]) -> Self {
-                    for (k, v) in attrs {
-                        self.attrs.insert(k.to_string(), v.to_string());
-                    }
+                    self.attrs = attrs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect();
                     self
                 }
                 pub fn attr(&self, k: &str) -> Option<&str> {
@@ -74,10 +66,8 @@ pub mod graph {
                 pub fn new(from: &'a str, to: &'a str) -> Self {
                     return Edge {from_to: (from, to), attrs: HashMap::new()}
                 }
-                pub fn with_attrs(mut self, attrs: &[(&'a str, &'a str)]) -> Self{
-                    for (k, v) in attrs {
-                        self.attrs.insert(k.to_string(), v.to_string());
-                    }
+                pub fn with_attrs(mut self,attrs: &[(&'a str, &'a str)]) -> Self {
+                    self.attrs = attrs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect();
                     self
                 }
                 pub fn attr(&self, k: &str) -> Option<&str> {
